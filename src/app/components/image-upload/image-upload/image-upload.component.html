@@ -1,0 +1,40 @@
+<div class="h-full">
+  <div class="flex flex-col justify-center items-center m-1">
+    <video #video autoplay playsinline class="w-[350px] h-[250px]"></video>
+    <div class="w-full flex items-center justify-center gap-1 mt-1">
+      <button (click)="capture()" class="w-32 h-8 rounded-lg bg-indigo-700">
+        Capture
+      </button>
+      <button
+        (click)="uploadWithPoints()"
+        class="w-32 h-8 rounded-lg bg-indigo-700"
+      >
+        Upload
+      </button>
+    </div>jbgfbkjnfkn
+  </div>
+
+  <div *ngIf="imagePreviewUrl" style="position: relative">
+    <h4>Measured Output:</h4>
+    <img
+      #previewImage
+      [src]="imagePreviewUrl"
+      class="preview-img"
+      (load)="drawCanvas()"
+    />
+    <canvas
+      #overlayCanvas
+      class="overlay-canvas"
+      style="position: absolute; top: 0; left: 0; cursor: crosshair"
+      (mousedown)="onMouseDown($event)"
+      (mousemove)="onMouseMove($event)"
+      (mouseup)="onMouseUp()"
+      (mouseleave)="onMouseUp()"
+      (click)="onCanvasClick($event)"
+    ></canvas>
+  </div>
+
+  <div *ngIf="result">
+    <p>📏 Real Distance: {{ result.real_distance_cm }} cm</p>
+  </div>
+</div>
