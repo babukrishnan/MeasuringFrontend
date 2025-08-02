@@ -1,6 +1,6 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, Inject, PLATFORM_ID} from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -24,13 +24,15 @@ export class ImageUploadComponent {
   draggingPoint: 'start' | 'end' | null = null;
   clickPoints: { x: number; y: number }[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
     if (navigator.mediaDevices?.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
+      navigator.mediaDevices?.getUserMedia({ video: true }).then((stream) => {
           this.video.nativeElement.srcObject = stream;
           this.video.nativeElement.play();
         })
@@ -43,6 +45,7 @@ export class ImageUploadComponent {
     }
     setTimeout(() => this.drawCanvas(), 300); // initialize default line after image loads
   }
+} 
 
   capture() {
     const canvas = document.createElement('canvas');
